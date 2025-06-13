@@ -11,6 +11,9 @@ public:
     float getFilteredValue() const;
     uint16_t getRawValue() const;
 
+    static constexpr float FILTERED_VALUE_THRESHOLD_MM = 50.0f; // 5cm threshold
+    bool isAboveThreshold() const;
+
 private:
     void lowPassFilter();
 

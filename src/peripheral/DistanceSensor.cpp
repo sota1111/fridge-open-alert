@@ -52,3 +52,6 @@ float DistanceSensor::getFilteredValue() const {
 uint16_t DistanceSensor::getRawValue() const {
     return sensor_output;
 }
+bool DistanceSensor::isAboveThreshold() const {
+    return sensor_filtered_value >= FILTERED_VALUE_THRESHOLD_MM;
+}
