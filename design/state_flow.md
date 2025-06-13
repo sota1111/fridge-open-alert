@@ -2,22 +2,18 @@
 # 状態遷移
 ```mermaid
 stateDiagram-v2
-    [*] --> DoorClosed
+    [*] --> 監視中
 
-    state DoorClosed {
-        ドア密封
+    state 監視中 {
+        開放時間1分未満
+        開放時間1分以上ブザー
+
+        開放時間1分未満 --> 開放時間1分以上ブザー : ドア開放検出
     }
 
-    state DoorOpen {
-        state OpenWait {
-            開放時間1分未満
-        }
-        state OpenAlarm {
-            開放検出（ブザー）
-        }
-        OpenWait --> OpenAlarm : 開放時間1分以上
-    }
+    state アラート
 
-    DoorClosed --> DoorOpen : ドア開放検出
-    DoorOpen --> DoorClosed : ドア密封検出
+    監視中 --> アラート : 開放時間1分以上
+    アラート --> 監視中 : ドア密封検出
+
 ```
