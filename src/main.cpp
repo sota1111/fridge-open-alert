@@ -1,18 +1,19 @@
 #include <Arduino.h>
 #include "peripheral/DistanceSensor.h"
+#include "core/DoorOpenDetector.h"
 
 hw_timer_t * timer0 = NULL;
 DistanceSensor ds;
+DoorOpenDetector doorOpenDetector(&ds); // DoorOpenDetector??C???X?^???X????
+
 void IRAM_ATTR onTimer() {
   ds.update();
 }
 
-// put function declarations here:
-int myFunction(int, int);
-
 void setup() {
   Serial.begin(115200);
   ds.init();
+  // doorOpenDetector.reset(); // ?K?v??????????????????????o??
   // Configure hardware timer for 10ms interrupts
   timer0 = timerBegin(0, 80, true);
   timerAttachInterrupt(timer0, &onTimer, true);
@@ -21,5 +22,11 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  static unsigned long lastUpdateTime = 0;
+  unsigned long currentTime = millis();
+
+  if (currentTime - lastUpdateTime >= 1000) {
+    lastUpdateTime = currentTime;
+    doorOpenDetector.update();
+  }
 }
