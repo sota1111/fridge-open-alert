@@ -29,7 +29,7 @@ private:
     SystemState systemState_;
     TimerState timerState_;
     unsigned long openStartMillis_;
-    static constexpr unsigned long ALERT_THRESHOLD_MS = 60000; // 1??
+    static constexpr unsigned long ALERT_THRESHOLD_MS = 60000; // 60 seconds
 
     void transitionTo(SystemState newSystem, TimerState newTimer);
     void handleMonitoring();

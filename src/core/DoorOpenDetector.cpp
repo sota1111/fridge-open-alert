@@ -68,21 +68,19 @@ void DoorOpenDetector::entry(SystemState system, TimerState timer) {
     if (system == SystemState::Monitoring && timer == TimerState::Counting) {
         openStartMillis_ = millis();
     }
-    // Beep on alert entry
-    if (system == SystemState::Alert) {
-        M5.Speaker.tone(4000, 1000);
-    }
 }
 
 void DoorOpenDetector::exit(SystemState system, TimerState timer) {
 
 }
 
+// alert????r?[?v??????
 void DoorOpenDetector::doAction(SystemState system, TimerState timer) {
-
+    if (system == SystemState::Alert) {
+        M5.Speaker.tone(4000, 800);
+    }
 }
 
-// ドア開放時間（ミリ秒）を取得
 unsigned long DoorOpenDetector::getOpenDurationMillis() const {
     if (timerState_ == TimerState::Counting) {
         return millis() - openStartMillis_;

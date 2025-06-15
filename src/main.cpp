@@ -16,13 +16,13 @@ void loop() {
   static unsigned long lastSensorUpdateTime = 0;
   unsigned long currentTime = millis();
 
-  // 10ms?????ds.update()?????
+  // ds.update()
   if (currentTime - lastSensorUpdateTime >= 10) {
     lastSensorUpdateTime = currentTime;
     ds.update();
   }
 
-  // 1000ms?????\???E????
+  // doorOpenDetector.update()
   if (currentTime - lastUpdateTime >= 1000) {
     lastUpdateTime = currentTime;
     doorOpenDetector.update();
