@@ -15,6 +15,7 @@ public:
     };
 
     DoorOpenDetector(DistanceSensor* sensor);
+    unsigned long getOpenDurationMillis() const;
 
     void update();
     void reset();

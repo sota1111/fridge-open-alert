@@ -81,3 +81,11 @@ void DoorOpenDetector::exit(SystemState system, TimerState timer) {
 void DoorOpenDetector::doAction(SystemState system, TimerState timer) {
 
 }
+
+// ドア開放時間（ミリ秒）を取得
+unsigned long DoorOpenDetector::getOpenDurationMillis() const {
+    if (timerState_ == TimerState::Counting) {
+        return millis() - openStartMillis_;
+    }
+    return 0;
+}

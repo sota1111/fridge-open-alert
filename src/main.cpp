@@ -1,32 +1,45 @@
 #include <Arduino.h>
+#include <M5Unified.h>
 #include "peripheral/DistanceSensor.h"
 #include "core/DoorOpenDetector.h"
 
-hw_timer_t * timer0 = NULL;
 DistanceSensor ds;
-DoorOpenDetector doorOpenDetector(&ds); // DoorOpenDetector??C???X?^???X????
-
-void IRAM_ATTR onTimer() {
-  ds.update();
-}
+DoorOpenDetector doorOpenDetector(&ds);
 
 void setup() {
-  Serial.begin(115200);
+  M5.begin();
   ds.init();
-  // doorOpenDetector.reset(); // ?K?v??????????????????????o??
-  // Configure hardware timer for 10ms interrupts
-  timer0 = timerBegin(0, 80, true);
-  timerAttachInterrupt(timer0, &onTimer, true);
-  timerAlarmWrite(timer0, 10000, true);
-  timerAlarmEnable(timer0);
 }
 
 void loop() {
   static unsigned long lastUpdateTime = 0;
+  static unsigned long lastSensorUpdateTime = 0;
   unsigned long currentTime = millis();
 
+  // 10ms?????ds.update()?????
+  if (currentTime - lastSensorUpdateTime >= 10) {
+    lastSensorUpdateTime = currentTime;
+    ds.update();
+  }
+
+  // 1000ms?????\???E????
   if (currentTime - lastUpdateTime >= 1000) {
     lastUpdateTime = currentTime;
     doorOpenDetector.update();
+
+    float distance = ds.getFilteredValue();
+    bool isOpen = ds.isAboveThreshold();
+
+    //M5.Lcd.clear();
+    M5.Lcd.setCursor(0, 10);
+    M5.Lcd.printf("Distance: %.1f mm", distance);
+    M5.Lcd.setCursor(0, 40);
+    M5.Lcd.printf("Door: %s", isOpen ? "Open" : "Closed");
+    // ドア開放時間表示
+    unsigned long openMs = doorOpenDetector.getOpenDurationMillis();
+    M5.Lcd.setCursor(0, 70);
+    M5.Lcd.printf("Open Time: %lu s", openMs / 1000);
   }
+
+  M5.update();
 }
