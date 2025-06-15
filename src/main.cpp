@@ -32,9 +32,9 @@ void loop() {
 
     //M5.Lcd.clear();
     M5.Lcd.setCursor(0, 10);
-    M5.Lcd.printf("Distance: %.1f mm", distance);
+    M5.Lcd.printf("Distance: %6.2f mm\n", distance);
     M5.Lcd.setCursor(0, 40);
-    M5.Lcd.printf("Door: %s", isOpen ? "Open" : "Closed");
+    M5.Lcd.printf("Door: %s", isOpen ? "Open  " : "Closed");
     // ドア開放時間表示
     unsigned long openMs = doorOpenDetector.getOpenDurationMillis();
     M5.Lcd.setCursor(0, 70);
