@@ -1,5 +1,6 @@
 #include "DoorOpenDetector.h"
 #include <M5Unified.h>
+#include "../Config.h"
 
 DoorOpenDetector::DoorOpenDetector(DistanceSensor* sensor)
     : sensor_(sensor),
@@ -76,7 +77,7 @@ void DoorOpenDetector::exit(SystemState system, TimerState timer) {
 
 // alert????r?[?v??????
 void DoorOpenDetector::doAction(SystemState system, TimerState timer) {
-    if (system == SystemState::Alert) {
+    if (system == SystemState::Alert && Config::COMMUNICATION_MODE == CommunicationMode::I2C) {
         M5.Speaker.tone(4000, 800);
     }
 }
@@ -86,4 +87,33 @@ unsigned long DoorOpenDetector::getOpenDurationMillis() const {
         return millis() - openStartMillis_;
     }
     return 0;
+}
+
+DoorOpenDetector::SystemState DoorOpenDetector::getSystemState() const {
+    return systemState_;
+}
+
+DoorOpenDetector::TimerState DoorOpenDetector::getTimerState() const {
+    return timerState_;
+}
+
+void DoorOpenDetector::sendSerialStatus() {
+    float distance = sensor_->getFilteredValue();
+    bool isOpen = sensor_->isAboveThreshold();
+    unsigned long openTime = getOpenDurationMillis();
+    
+    Serial.print("STATUS:");
+    Serial.print("distance=");
+    Serial.print(distance);
+    Serial.print(",door=");
+    Serial.print(isOpen ? "open" : "closed");
+    Serial.print(",system_state=");
+    Serial.print(systemState_ == SystemState::Monitoring ? "monitoring" : "alert");
+    Serial.print(",timer_state=");
+    Serial.print(timerState_ == TimerState::Stopped ? "stopped" : "counting");
+    Serial.print(",open_time=");
+    Serial.print(openTime);
+    Serial.print(",buzzer=");
+    Serial.print(systemState_ == SystemState::Alert ? "on" : "off");
+    Serial.println();
 }

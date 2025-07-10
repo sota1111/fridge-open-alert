@@ -23,6 +23,10 @@ public:
     void entry(SystemState system, TimerState timer);
     void exit(SystemState system, TimerState timer);
     void doAction(SystemState system, TimerState timer);
+    
+    SystemState getSystemState() const;
+    TimerState getTimerState() const;
+    void sendSerialStatus();
 
 private:
     DistanceSensor* sensor_;

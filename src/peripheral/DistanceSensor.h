@@ -13,6 +13,10 @@ public:
 
     static constexpr float FILTERED_VALUE_THRESHOLD_MM = 50.0f; // 5cm threshold
     bool isAboveThreshold() const;
+    
+    // Serial communication methods
+    void setSerialDistance(float distance);
+    void checkSerialInput();
 
 private:
     void lowPassFilter();
@@ -25,6 +29,9 @@ private:
     uint16_t sensor_output; // Type: uint16_t (Unsigned 16-bit integer, raw sensor value)
     float sensor_filtered_value; // Type: float (Filtered sensor value)
     float sensor_filtered_value_prev; // Type: float (Previous filtered sensor value)
-}; // Missing closing brace for class
+    
+    // Serial communication buffer
+    String serialBuffer;
+};
 
 #endif // DISTANCE_SENSOR_H
